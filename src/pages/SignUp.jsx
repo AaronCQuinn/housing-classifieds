@@ -2,6 +2,8 @@ import {React, useState} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 import {getAuth, createUserWithEmailAndPassword, updateProfile} from 'firebase/auth'
 import { db } from '../firebase.config'
+import { toast } from 'react-toastify'
+import { setDoc, doc, serverTimestamp } from 'firebase/firestore'
 import {ReactComponent as ArrowRightIcon} from '../assets/svg/keyboardArrowRightIcon.svg'
 import visibilityIcon from '../assets/svg/visibilityIcon.svg'
 
@@ -17,6 +19,7 @@ const SignUp = () => {
 
   const onChange = (e) => (
     setFormData((prevState) => ({
+      // Spread what was previously in the object, then input the new value (or overwrite it).
       ...prevState,
       [e.target.id]: e.target.value
     }))
@@ -28,12 +31,22 @@ const SignUp = () => {
       const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+
       updateProfile(auth.currentUser, {
         displayName: username
       });
+
+      const formDataDuplicate = {
+        ...formData
+      };
+      delete formDataDuplicate.password;
+      formDataDuplicate.timestamp = serverTimestamp();
+
+      await setDoc(doc(db, 'users', user.uid), formDataDuplicate);
+
       navigate('/');
     } catch (error) {
-      console.log(error);
+      toast.error('An error occurred with registration.')
     }
   }
 
@@ -63,7 +76,7 @@ const SignUp = () => {
           <p className="signInText">
             Sign Up
           </p>
-          <button className="signInButton">
+          <button className="signInButton" type='submit'>
             <ArrowRightIcon fill='#ffffff' width='34px' height='34px' /> 
           </button>
         </div>
