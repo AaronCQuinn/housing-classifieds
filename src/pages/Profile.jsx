@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { getAuth, updateProfile } from 'firebase/auth'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase.config'
 import { toast } from 'react-toastify'
+import arrowRight from '../assets/svg/keyboardArrowRightIcon.svg'
+import homeIcon from '../assets/svg/homeIcon.svg'
 
 const Profile = () => {
   const auth = getAuth();
@@ -75,6 +77,12 @@ const Profile = () => {
           <input type="text" id="email" className={!changeDetails ? 'profileEmail' : 'profileEmailActive'} disabled={true} value={email} onChange={onChange}/>
         </form>
       </div>
+
+      <Link to='/create-listing' className='createListing'>
+        <img src={homeIcon} alt="home" />
+        <p>Sell or rent your property.</p>
+        <img src={arrowRight} alt="arrow right" />
+      </Link>
     </main>
     </div>
   )
