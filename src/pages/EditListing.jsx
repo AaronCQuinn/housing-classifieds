@@ -2,16 +2,17 @@ import React, { useEffect } from 'react'
 import { useState, useRef } from 'react'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
-import { useNavigate } from 'react-router-dom'
+import { doc, updateDoc, getDoc, serverTimestamp } from 'firebase/firestore'
+import { useNavigate, useParams } from 'react-router-dom'
 import Spinner from '../components/Spinner'
 import { toast } from 'react-toastify'
 import {v4 as uuidv4} from 'uuid'
 import { db } from '../firebase.config'
 
-const CreateListing = () => {
+const EditListing = () => {
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [listing, setListing] = useState(false);
   const [formData, setFormData] = useState({
     type: 'rent',
     name: '',
@@ -39,7 +40,33 @@ const CreateListing = () => {
 
   const auth = getAuth();
   const navigate = useNavigate();
+  const params = useParams();
   const isMounted = useRef(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchListing = async () => {
+      const docRef = doc(db, 'listings', params.listingId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setListing(docSnap.data());
+        setFormData({...docSnap.data(), address: docSnap.data().location})
+        setLoading(false);
+      } else {
+        navigate('/');
+        toast.error('Listing does not exist.')
+      }
+    }
+
+    fetchListing()
+  }, [navigate, params.listingId]);
+
+  useEffect(() => {
+    if (listing && listing.userRef !== auth.currentUser.uid) {
+      toast.error("Unauthorized to edit that listing.");
+      navigate('/');
+    }
+  })
 
   useEffect(() => {
     if (isMounted) {
@@ -144,15 +171,16 @@ const CreateListing = () => {
       geoLocation,
       timestamp: serverTimestamp()
     };
-
+    
     formDataFinal.location = address;
     delete formDataFinal.images;
     delete formDataFinal.address;
     !formDataFinal.offer && delete formDataFinal.discountedPrice;
 
-    const docRef = await addDoc(collection(db, 'listings'),  formDataFinal);
+    const docRef = doc(db, 'listings', params.listingId);
+    await updateDoc(docRef, formDataFinal);
     setLoading(false);
-    toast.success('Listing successfully saved.');
+    toast.success('Listing successfully update.');
     navigate(`/category/${formDataFinal.type}/${docRef.id}`)
   }
 
@@ -189,7 +217,7 @@ const CreateListing = () => {
   return (
     <div className="profile">
       <header>
-        <p className="pageHeader">Create a Listing</p>
+        <p className="pageHeader">Edit Listing</p>
       </header>
 
       <main>
@@ -272,11 +300,11 @@ const CreateListing = () => {
           <label className='formLabel'>Images</label>
           <p className="imagesInfo">The first image selected will be displayed as the cover photo (max 6).</p>
           <input type="file" id='images' onChange={onMutate} max='6' accept='.jpg,.png,.jpeg' multiple required className="formInputFile" />
-          <button className="primaryButton createListingButton" type='submit'>Create Listing</button>
+          <button className="primaryButton createListingButton" type='submit'>Edit Listing</button>
         </form>
       </main>
     </div>
   )
 }
 
-export default CreateListing
+export default EditListing
