@@ -140,6 +140,8 @@ const EditListing = () => {
           console.log('Upload is ' + progress + '% done');
           // eslint-disable-next-line
           switch (snapshot.state) {
+            default: 
+              break;
             case 'paused':
               console.log('Upload is paused');
               break;
