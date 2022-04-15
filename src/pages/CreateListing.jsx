@@ -10,6 +10,7 @@ import {v4 as uuidv4} from 'uuid'
 import { db } from '../firebase.config'
 
 const CreateListing = () => {
+    // eslint-disable-next-line
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -55,7 +56,7 @@ const CreateListing = () => {
     return () => {
       isMounted.current = false;
     }
-  }, [isMounted])
+  }, [isMounted, auth, formData, navigate])
 
   const onSubmit = async (e) => {
     e.preventDefault();

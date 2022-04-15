@@ -10,6 +10,7 @@ import {v4 as uuidv4} from 'uuid'
 import { db } from '../firebase.config'
 
 const EditListing = () => {
+    // eslint-disable-next-line
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState(false);
@@ -82,7 +83,7 @@ const EditListing = () => {
     return () => {
       isMounted.current = false;
     }
-  }, [isMounted])
+  }, [isMounted, auth, formData, navigate])
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -137,6 +138,7 @@ const EditListing = () => {
         (snapshot) => {
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log('Upload is ' + progress + '% done');
+          // eslint-disable-next-line
           switch (snapshot.state) {
             case 'paused':
               console.log('Upload is paused');
