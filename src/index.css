@@ -503,6 +503,21 @@ button {
   align-items: center;
 }
 
+.shareIconDivLeft {
+  cursor: pointer;
+  position: fixed;
+  top: 3%;
+  left: 5%;
+  z-index: 2;
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .listingName {
   font-weight: 600;
   font-size: 1.5rem;

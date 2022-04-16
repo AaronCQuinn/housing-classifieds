@@ -16,6 +16,7 @@ const Contact = () => {
         const getOwner = async () => {
             const docRef = doc(db, 'users', params.ownerId);
             const docSnap = await getDoc(docRef);
+            console.log(docSnap.data());
 
             if (docSnap.exists()) {
                 setOwner(docSnap.data());

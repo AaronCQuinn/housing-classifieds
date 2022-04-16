@@ -56,7 +56,7 @@ const Offers = () => {
         where('offer', '==', true), 
         orderBy('timestamp', 'desc'),
         startAfter(lastFetchedListing),
-        limit(10)
+        limit(3)
       )
 
       // Run query

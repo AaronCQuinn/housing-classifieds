@@ -10,6 +10,7 @@ import 'swiper/swiper-bundle.css'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import Spinner from '../components/Spinner'
 import shareIcon from '../assets/svg/shareIcon.svg'
+import keyboardArrowLeft from '../assets/svg/keyboard-arrow-left.svg'
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y])
 
 const Listing = () => {
@@ -28,7 +29,6 @@ const Listing = () => {
       const docSnap = await getDoc(docRef);
       
       if (docSnap.exists()) {
-        console.log(docSnap.data());
         setListing(docSnap.data());
 
         setLoading(false)
@@ -68,6 +68,12 @@ const Listing = () => {
         }, 2000)
       }}>
         <img src={shareIcon} alt="" />
+      </div>
+
+      <div className="shareIconDivLeft" onClick={() => {
+        navigate(`/category/${params.categoryName}`)
+      }}>
+        <img src={keyboardArrowLeft} alt="" />
       </div>
 
       {shareLinkCopied && <p className='linkCopied'>Link Copied!</p>}
@@ -113,8 +119,7 @@ const Listing = () => {
 
         {auth.currentUser?.uid !== listing.userRef && (
           <Link 
-          to={`/contact/${listing.userRef}
-          ?listingName=${listing.name}`} 
+          to={`/contact/${listing.userRef}?listingName=${listing.name}`} 
           className='primaryButton'> 
           Contact Owner
           </Link>
