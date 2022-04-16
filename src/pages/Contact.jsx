@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase.config'
 import { toast } from 'react-toastify'
@@ -11,6 +11,7 @@ const Contact = () => {
     // eslint-disable-next-line
     const [searchParams, setSearchParams] = useSearchParams();
     const params = useParams();
+    const navigate = useNavigate();
     
     useEffect(() => {
         const getOwner = async () => {
@@ -62,6 +63,10 @@ const Contact = () => {
                 </form>
             </main>
         )}
+
+        <div className='forgotPasswordLink' style={{color: 'black', marginTop: '5vh'}} onClick={() => navigate(-1)}>
+            Go Back
+        </div>
     </div>
   )
 }
