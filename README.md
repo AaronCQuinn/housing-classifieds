@@ -1,6 +1,6 @@
 #  Housing Classifieds
 
-A full stack application created with React & Firebase v9.
+A full stack mobile-first application created with React & Firebase v9.
 
 This project uses googles authentication and storage for saving and fetching listings and user profiles.
 
