@@ -83,7 +83,8 @@ const EditListing = () => {
     return () => {
       isMounted.current = false;
     }
-  }, [isMounted, auth, formData, navigate])
+    // eslint-disable-next-line
+  }, [isMounted])
 
   const onSubmit = async (e) => {
     e.preventDefault();
